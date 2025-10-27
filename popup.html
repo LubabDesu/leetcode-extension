@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>LeetCode AI Helper</title>
+        <style>
+            body {
+                font: 13px/1.4 system-ui, -apple-system, Segoe UI, Roboto,
+                    sans-serif;
+                margin: 12px;
+                width: 360px;
+            }
+            h1 {
+                font-size: 16px;
+                margin: 0 0 8px;
+            }
+            .row {
+                margin: 8px 0;
+            }
+            .label {
+                font-weight: 600;
+                margin-bottom: 4px;
+            }
+            pre,
+            code {
+                white-space: pre-wrap;
+                word-break: break-word;
+                background: #f6f8fa;
+                padding: 8px;
+                border-radius: 6px;
+            }
+            .btns {
+                display: flex;
+                gap: 8px;
+            }
+            button {
+                padding: 6px 10px;
+                border-radius: 8px;
+                border: 1px solid #ddd;
+                cursor: pointer;
+            }
+            #status {
+                opacity: 0.75;
+                margin-top: 8px;
+            }
+            #result {
+                margin-top: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>LeetCode AI Helper</h1>
+
+        <div class="btns row">
+            <button id="refresh">Refresh</button>
+            <button id="analyze">Analyze with AI</button>
+        </div>
+
+        <div class="row">
+            <div class="label">Title</div>
+            <div id="title">—</div>
+        </div>
+
+        <div class="row">
+            <div class="label">Description (preview)</div>
+            <pre id="description">—</pre>
+        </div>
+
+        <div class="row">
+            <div class="label">Code (preview)</div>
+            <pre id="code">—</pre>
+        </div>
+
+        <div id="status" class="row">Ready</div>
+
+        <div class="row">
+            <div class="label">Result</div>
+            <div id="result">—</div>
+        </div>
+
+        <!-- Your existing popup logic -->
+        <script src="popup.js"></script>
+    </body>
+</html>

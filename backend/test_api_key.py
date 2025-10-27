@@ -1,0 +1,3 @@
+import os
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY") if not None else "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"
+print(OPENROUTER_API_KEY)

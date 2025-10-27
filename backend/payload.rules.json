@@ -1,0 +1,17 @@
+{
+    "task_context": {
+        "source": "leetcode",
+        "title": "Two Sum",
+        "difficulty": "Easy",
+        "constraints": "n up to 1e5",
+        "examples": "nums=[2,7,11,15], target=9"
+    },
+    "work_state": {
+        "language": "python",
+        "code_snapshot": "def twoSum(nums, target):\n  for i in range(len(nums)):\n    for j in range(i+1, len(nums)):\n      if nums[i]+nums[j]==target:\n        return [i,j]\n"
+    },
+    "signals": {
+        "complexity_guess": "O(n^2)",
+        "pattern_guess": "bruteforce"
+    }
+}

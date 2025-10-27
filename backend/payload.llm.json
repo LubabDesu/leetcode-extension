@@ -1,0 +1,13 @@
+{
+    "task_context": {
+        "source": "leetcode",
+        "title": "Merge Intervals",
+        "difficulty": "Medium",
+        "constraints": "n up to 1e5",
+        "examples": "Input: [[1,3],[2,6],[8,10],[15,18]]"
+    },
+    "work_state": {
+        "language": "python",
+        "code_snapshot": "def merge(intervals):\n    intervals.sort()\n    out=[]\n    for s,e in intervals:\n        if not out or out[-1][1] < s:\n            out.append([s,e])\n        else:\n            out[-1][1] = max(out[-1][1], e)\n    return out\n"
+    }
+}

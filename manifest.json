@@ -1,0 +1,55 @@
+{
+  "manifest_version": 3,
+  "name": "LeetCode Problem Scraper",
+  "description": "Scrapes LeetCode problem data, detects failed submissions, and surfaces the last failure in the popup.",
+  "version": "1.2.0",
+  "icons": {
+    "16": "Photo on 10-26-25 at 1.11 PM.jpg",
+    "32": "Photo on 10-26-25 at 1.11 PM.jpg",
+    "48": "Photo on 10-26-25 at 1.11 PM.jpg",
+    "128": "Photo on 10-26-25 at 1.11 PM.jpg"
+  },
+
+  "permissions": [
+    "scripting",
+    "storage",
+    "tabs",
+    "activeTab"
+  ],
+
+  "host_permissions": [
+    "https://leetcode.com/problems/*",
+    "https://www.leetcode.com/problems/*"
+  ],
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "LeetCode Scraper"
+  },
+
+  "content_scripts": [
+    {
+      "matches": [
+        "https://leetcode.com/problems/*",
+        "https://www.leetcode.com/problems/*"
+      ],
+      "js": ["feedbackListener.js"],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "web_accessible_resources": [
+    {
+      "resources": [],
+      "matches": ["<all_urls>"]
+    }
+  ],
+
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
+  }
+}
