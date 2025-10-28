@@ -5,15 +5,18 @@
     <title>LeetCode AI Helper</title>
     <style>
       :root {
-        --bg: #f9fafb;
-        --card-bg: #ffffff;
-        --border: #e5e7eb;
-        --text: #111827;
-        --subtext: #6b7280;
-        --primary: #2563eb;
-        --primary-hover: #1d4ed8;
+        --bg: #0d1117;
+        --card-bg: #161b22;
+        --border: #30363d;
+        --text: #f0f6fc;
+        --subtext: #8b949e;
+        --primary: #f89f2d;
+        --primary-hover: #ffb64c;
         --radius: 12px;
-        --shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        --shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+        --code-bg: #1e252f;
+        --success-bg: #102a18;
+        --success-border: #1f6f43;
       }
 
       body {
@@ -29,7 +32,8 @@
         font-size: 18px;
         margin: 0 0 12px;
         font-weight: 600;
-        color: var(--text);
+        color: var(--primary);
+        text-align: center;
       }
 
       .card {
@@ -54,7 +58,7 @@
       pre {
         white-space: pre-wrap;
         word-break: break-word;
-        background: #f3f4f6;
+        background: var(--code-bg);
         padding: 10px;
         border-radius: 8px;
         font-family: "JetBrains Mono", monospace;
@@ -62,6 +66,7 @@
         line-height: 1.5;
         max-height: 150px;
         overflow-y: auto;
+        color: #e6edf3;
       }
 
       .btns {
@@ -71,12 +76,13 @@
       }
 
       button {
+        flex: 1;
         padding: 8px 14px;
         border-radius: 8px;
         border: 1px solid var(--border);
         background: var(--primary);
-        color: white;
-        font-weight: 500;
+        color: #000;
+        font-weight: 600;
         font-size: 13px;
         cursor: pointer;
         transition: background 0.2s ease, transform 0.1s ease;
@@ -94,22 +100,40 @@
         opacity: 0.8;
         font-size: 13px;
         margin-top: 6px;
+        color: var(--subtext);
       }
 
       #result {
         margin-top: 10px;
         padding: 10px;
         border-radius: 8px;
-        background: #ecfdf5;
-        border: 1px solid #a7f3d0;
+        background: var(--success-bg);
+        border: 1px solid var(--success-border);
         font-size: 13px;
-        color: #065f46;
+        color: #7ee787;
       }
 
       #result.empty {
-        background: #f9fafb;
+        background: var(--card-bg);
         border: 1px dashed var(--border);
         color: var(--subtext);
+      }
+
+      a {
+        color: var(--primary);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background-color: #444c56;
+        border-radius: 4px;
       }
     </style>
   </head>

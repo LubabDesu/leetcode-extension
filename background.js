@@ -156,6 +156,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       // return true; // indicate we will send response asynchronously (if used)
     }
 
+    if (message.type === 'TRIGGER_POPUP_KEYWORD') {
+      console.log('💡 Triggered popup by user typing "popup"');
+      notifyUserAboutFailure();
+    }
+
     // (Optional) Accept a 'REQUEST_SCRAPE' message to tell content script to run scraping immediately
     if (message.type === 'REQUEST_SCRAPE' && sender?.tab?.id) {
       // forward a message to the content script in the same tab
