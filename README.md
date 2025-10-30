@@ -68,8 +68,6 @@ Planned capabilities:
 
 | Component | Technology |
 |----------|------------|
-| Frontend | TypeScript, Chrome Extension APIs |
-| Backend  | FastAPI, Pydantic |
-| AI       | OpenRouter APIs (DeepSeek / Claude models) |
-| Logging  | Structured FastAPI logs |
-| Integration | Monaco Editor hooks |
+| Frontend | JavaScript, Chrome Extension APIs |
+| Backend  | FastAPI |
+| AI       | OpenRouter APIs (DeepSeek models) |
