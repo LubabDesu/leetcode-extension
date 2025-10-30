@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
 async function scrapeProblemInPage(tabId) {
     const [{ result }] = await chrome.scripting.executeScript({
         target: { tabId },
-        world: "MAIN", // important: access page JS world (better monaco access)
+        world: "MAIN",
         func: () => {
             // --- TITLE ---
             let title =
@@ -50,7 +50,7 @@ async function scrapeProblemInPage(tabId) {
 
             let code = getMonacoValue();
             if (!code) {
-                // Fallback 1: Monaco hidden textarea
+                // Fallback 1: hidden Monaco textarea
                 const textAreas = document.querySelectorAll("textarea");
                 for (const ta of textAreas) {
                     if (ta.closest(".monaco-editor") && ta.value) {
@@ -60,10 +60,8 @@ async function scrapeProblemInPage(tabId) {
                 }
             }
             if (!code) {
-                // Fallback 2: visible lines (often empty/incomplete, last resort)
-                const lines = document.querySelectorAll(
-                    ".view-lines .view-line"
-                );
+                // Fallback 2: visible lines (last resort)
+                const lines = document.querySelectorAll(".view-lines .view-line");
                 if (lines?.length) {
                     code = Array.from(lines)
                         .map((l) => l.textContent || "")
@@ -71,11 +69,20 @@ async function scrapeProblemInPage(tabId) {
                 }
             }
 
-            return { title, description, code };
+            // --- DETECT LANGUAGE ---
+            let language = "";
+            const langSelector =
+                document.querySelector('div[data-cy="lang-select"]') ||
+                document.querySelector(".ant-select-selection-item") ||
+                document.querySelector(".select-language") ||
+                document.querySelector(".language-selector");
+            if (langSelector) language = langSelector.innerText.trim().toLowerCase();
+
+            return { title, description, code, language };
         },
     });
 
-    return result || { title: "", description: "", code: "" };
+    return result || { title: "", description: "", code: "", language: "" };
 }
 
 async function fetchProblem() {
@@ -111,22 +118,6 @@ async function fetchProblem() {
     }
 }
 
-async function getProblemFromPage(tabId) {
-    const [{ result }] = await chrome.scripting.executeScript({
-        target: { tabId },
-        func: () => {
-            try {
-                const data = localStorage.getItem("leetcodeScrapes");
-                return data ? JSON.parse(data) : null;
-            } catch (e) {
-                console.error("Failed to read from localStorage:", e);
-                return null;
-            }
-        },
-    });
-    return result;
-}
-
 async function analyzeNow() {
     const [tab] = await chrome.tabs.query({
         active: true,
@@ -138,16 +129,14 @@ async function analyzeNow() {
     }
 
     const problemData = await scrapeProblemInPage(tab.id);
-    console.log("📦 problemData:", problemData); // <- you'll see it in the popup console
+    console.log("📦 problemData:", problemData);
 
     if (!problemData?.title) {
         setStatus("⚠️ Could not find problem data. Try refreshing.");
         return;
     }
     if (!problemData?.code?.trim()) {
-        setStatus(
-            "⚠️ No code detected. Click into the editor or open the code tab."
-        );
+        setStatus("⚠️ No code detected. Click into the editor or open the code tab.");
         return;
     }
 
@@ -159,7 +148,7 @@ async function analyzeNow() {
             examples: "",
         },
         work_state: {
-            language: "python",
+            language: problemData.language || "python", // ← now dynamic
             code_snapshot: problemData.code || "",
             code_diff: "",
             elapsed_sec: 0,
@@ -206,30 +195,30 @@ function renderResult(r) {
         return;
     }
     el.innerHTML = `
-   <div><strong>Status:</strong> ${esc(r.status || "")}</div>
-   <div><strong>Hint:</strong> ${esc(r.hint || "")}</div>
-   <div><strong>Next step:</strong> ${esc(r.next_step || "")}</div>
-   ${
-       r.watch_out?.length
-           ? `<div><strong>Watch out:</strong><ul>${r.watch_out
-                 .map((x) => `<li>${esc(x)}</li>`)
-                 .join("")}</ul></div>`
-           : ""
-   }
-   ${
-       r.try_tests?.length
-           ? `<div><strong>Try tests:</strong><ul>${r.try_tests
-                 .map((x) => `<li><code>${esc(x)}</code></li>`)
-                 .join("")}</ul></div>`
-           : ""
-   }
-   <div style="opacity:.7;margin-top:6px"><small>confidence: ${
-       r.confidence ?? "?"
-   }, next check in ~${r.intervention_after_sec ?? 30}s</small></div>
- `;
+        <div><strong>Status:</strong> ${esc(r.status || "")}</div>
+        <div><strong>Hint:</strong> ${esc(r.hint || "")}</div>
+        <div><strong>Next step:</strong> ${esc(r.next_step || "")}</div>
+        ${
+            r.watch_out?.length
+                ? `<div><strong>Watch out:</strong><ul>${r.watch_out
+                      .map((x) => `<li>${esc(x)}</li>`)
+                      .join("")}</ul></div>`
+                : ""
+        }
+        ${
+            r.try_tests?.length
+                ? `<div><strong>Try tests:</strong><ul>${r.try_tests
+                      .map((x) => `<li><code>${esc(x)}</code></li>`)
+                      .join("")}</ul></div>`
+                : ""
+        }
+        <div style="opacity:.7;margin-top:6px"><small>confidence: ${
+            r.confidence ?? "?"
+        }, next check in ~${r.intervention_after_sec ?? 30}s</small></div>
+    `;
 }
 
-// Helper functions ;
+// Helper functions
 function extractConstraints(desc) {
     if (!desc) return "";
     const m = desc.match(/Constraints?[\s\S]{0,800}/i);
